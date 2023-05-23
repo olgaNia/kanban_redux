@@ -5,7 +5,7 @@ import Task from "./Task";
 const Column = (props) => {
     return (
         <div className="col">
-            <h3>{props.status.toUpperCase()}</h3>
+            <h3 style={{color:"green",marginTop:"20px"}}>{props.status.toUpperCase()}</h3>
             { props.tasks
             .filter(el => el.status === props.status)
             .map(task => <Task key={task.id}

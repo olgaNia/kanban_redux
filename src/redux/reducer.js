@@ -47,9 +47,11 @@ function reducer(state = initialState, action){
             const deleteTask = state.tasks.filter(elem => elem.id !== action.payload)
             return {...state,tasks : deleteTask}
 
-        case "TOGGLE_MODAL": return {...state,
-            modalWindowData: {...state.modalWindowData,
-                isOpen : !state.modalWindowData.isOpen,task: action.payload.task, mode: action.payload.mode}}
+        case "TOGGLE_MODAL":
+            return {...state, modalWindowData: {...state.modalWindowData,
+                isOpen : !state.modalWindowData.isOpen,
+                    task: action.payload.task,
+                    mode: action.payload.mode}}
 
         default: return state
     }

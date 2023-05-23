@@ -8,14 +8,14 @@ const KanbanBoard = (props) => {
 
     return (
         <div>
-            <h1>{props.appName}</h1>
+            <h1 style={{color:"indianred",margin:"20px"}}>{props.appName}</h1>
 
             <button type="button"
                     className="btn btn-outline-info">
                 Create New Task
             </button>
 
-            <div className="container text-center">
+            <div className="container text-center" >
                 <div className="row align-items-start">
                     {props.statuses.map((el, index) =>
                         <Column
