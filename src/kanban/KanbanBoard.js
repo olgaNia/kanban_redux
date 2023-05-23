@@ -1,7 +1,6 @@
+import React from "react";
 import {connect} from "react-redux";
 import Column from "./Column";
-import Button from "@mui/material/Button";
-import * as React from "react";
 import ModalWindow from "./ModalWindow";
 
 const KanbanBoard = (props) => {
@@ -11,7 +10,9 @@ const KanbanBoard = (props) => {
             <h1 style={{color:"indianred",margin:"20px"}}>{props.appName}</h1>
 
             <button type="button"
-                    className="btn btn-outline-info">
+                    className="btn btn-outline-info"
+                    onClick={() => props.openModal(props.task, "Create")}
+            >
                 Create New Task
             </button>
 
@@ -31,6 +32,11 @@ const KanbanBoard = (props) => {
 const mapStateToProps = (state) => ({
     appName: state.appName,
     statuses: state.statuses,
-
 })
-export default connect(mapStateToProps)(KanbanBoard);
+const mapDispatchToProps=(dispatch)=>({
+    openModal: (task, mode) => dispatch({
+        type: "TOGGLE_MODAL",
+        payload: {task, mode}
+    }),
+})
+export default connect(mapStateToProps,mapDispatchToProps)(KanbanBoard);

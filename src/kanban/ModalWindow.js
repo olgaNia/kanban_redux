@@ -1,34 +1,15 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import React from 'react';
 import {connect} from "react-redux";
 import {useEffect, useState} from "react";
-import ButtonGroup from '@mui/material/ButtonGroup';
-import TextField from '@mui/material/TextField';
-
-
-const style = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    '& > *': {
-        m: 1,
-    },
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
+import {Button, InputGroup, Modal} from "react-bootstrap";
+import Form from 'react-bootstrap/Form'
 
 function ModalWindow(props) {
     const [inputCheck, setInputCheck] = useState("")
+    const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
+    const [status, setStatus] = useState(props.statuses[0])
+    const [priority, setPriority] = useState(props.priorities[0])
     const handleYesButton = () => {
         props.deleteTask(props.task.id)
         props.closeModal()
@@ -37,84 +18,154 @@ function ModalWindow(props) {
         setInputCheck('')
     }, [props.task])
 
-    if (props.mode === "Delete") {
+    if (props.mode === "Create") {
         return (
-            <Modal
-                open={props.isOpen}
-                // onClose={}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title"
-                                variant="h6"
-                                component="h2">
-                        Are you sure you want to delete this task?
-                    </Typography>
-                    <Typography id="modal-modal-description"
-                                sx={{mt: 2}}>
-                        Repeat <b>{props.task.name}</b> to delete:
-                        <TextField type="text"
-                                   variant="outlined"
-                                   sx={{width: 500,
-                                       maxWidth: '100%'}}
-                                   value={inputCheck}
-                                   onChange={event => setInputCheck(event.target.value)}/>
-                    </Typography>
-                    <ButtonGroup variant="outlined"
-                                 aria-label="outlined button group">
-                        <Button onClick={handleYesButton}
-                                disabled={inputCheck !== props.task.name}
-                                color="error">
-                            Yes,I'm sure
+            <>
+                <Modal show={props.isOpen} onHide={props.closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Create new Task</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text id="basic-addon1">Name</InputGroup.Text>
+                            <Form.Control
+                                value={name}
+                                onChange={event => setName(event.target.value)}
+                                placeholder="Enter task's name"
+                                aria-describedby="basic-addon1"
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text id="basic-addon1">Description</InputGroup.Text>
+                            <Form.Control
+                                value={description}
+                                onChange={event => setDescription(event.target.value)}
+                                placeholder="Enter name's description"
+                                aria-describedby="basic-addon1"
+                            />
+                        </InputGroup>
+                        <Form.Select
+                            aria-label="Default select example"
+                            onChange={(event) => setStatus(event.target.value)}>
+                            <option value={status}>Status</option>
+                        </Form.Select>
+                        <hr/>
+                        <Form.Select
+                            aria-label="Default select example"
+                            onChange={(event) => setPriority(event.target.value)}>
+                            <option value={priority}>Priority</option>
+                        </Form.Select>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" onClick={props.closeModal}>
+                            Close
                         </Button>
-                        {" "}
-                        <Button onClick={() => props.closeModal()}>
-                            Cancel
+                        <Button variant="outline-primary" onClick={props.closeModal}>
+                            Save Changes
                         </Button>
-                    </ButtonGroup>
-                </Box>
-            </Modal>
-        );
-    }
-    if (props.mode === "Update") {
-        return (
-            <Modal
-                open={props.isOpen}
-                // onClose={}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Text in a modal
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{mt: 2}}>
-                        Repeat <b>{props.task.name}</b> to delete
-                        <input type="text" value={inputCheck} onChange={event => setInputCheck(event.target.value)}/>
-                    </Typography>
-                    <Button onClick={handleYesButton}
-                            disabled={inputCheck !== props.task.name}
-                    >
-                        Yes,I'm sure
-                    </Button>
-                    <Button onClick={() => props.closeModal()}>
-                        Cancel
-                    </Button>
-                </Box>
-
-            </Modal>
+                    </Modal.Footer>
+                </Modal>
+            </>
         )
     }
+
+    if (props.mode === "Delete") {
+        return (
+            <>
+                <Modal show={props.isOpen} onHide={props.closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Are you sure you want to delete this task?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Repeat <b>{props.task?.name}</b> to delete:
+                      <p></p>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                value={inputCheck}
+                                onChange={event => setInputCheck(event.target.value)}
+                                placeholder="Enter task's name"
+                                aria-describedby="basic-addon1"
+                            />
+                        </InputGroup>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary"
+                                onClick={props.closeModal}>
+                            Close
+                        </Button>
+                        <Button variant="outline-primary"
+                                onClick={handleYesButton}
+                                disabled={inputCheck !== props.task?.name}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
+        );
+    }
+    if (props.mode === "Edit") {
+        return (
+            <>
+                <Modal show={props.isOpen} onHide={props.closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit Task</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text id="basic-addon1">Name</InputGroup.Text>
+                            <Form.Control
+                                value={name}
+                                onChange={event => setName(event.target.value)}
+                                placeholder="Enter task's name"
+                                aria-describedby="basic-addon1"
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text id="basic-addon1">Description</InputGroup.Text>
+                            <Form.Control
+                                value={description}
+                                onChange={event => setDescription(event.target.value)}
+                                placeholder="Enter name's description"
+                                aria-describedby="basic-addon1"
+                            />
+                        </InputGroup>
+                        <Form.Select
+                            aria-label="Default select example"
+                            onChange={(event) => setStatus(event.target.value)}>
+                            <option value={status}>Status</option>
+                        </Form.Select>
+                        <hr/>
+                        <Form.Select
+                            aria-label="Default select example"
+                            onChange={(event) => setPriority(event.target.value)}>
+                            <option value={priority}>Priority</option>
+                        </Form.Select>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" onClick={props.closeModal}>
+                            Close
+                        </Button>
+                        <Button variant="outline-primary" onClick={props.closeModal}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
+        )
+    }
+
 }
 
 const mapStateToProps = (state) => ({
+    statuses: state.statuses,
+    priorities: state.priorities,
     isOpen: state.modalWindowData.isOpen,
     mode: state.modalWindowData.mode,
-    task: state.modalWindowData.task
+    task: state.modalWindowData.task,
 })
 const mapDispatchToProps = (dispatch) => ({
     closeModal: () => dispatch({type: "TOGGLE_MODAL", payload: {}}),
-    deleteTask: (id) => dispatch({type: "DELETE_TASK", payload: id})
+    deleteTask: (id) => dispatch({type: "DELETE_TASK", payload: id}),
+
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ModalWindow)

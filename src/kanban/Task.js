@@ -44,7 +44,9 @@ const Task = (props) => {
             <div className="card-body">
 
                 <button type="button"
-                        className="btn btn-outline-warning">
+                        className="btn btn-outline-warning"
+                        onClick={() => props.openModal(props.task, "Edit")}
+                >
                     Edit
                 </button>
                 {' '}

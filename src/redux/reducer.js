@@ -20,7 +20,8 @@ const initialState= {
 function reducer(state = initialState, action){
     switch (action.type){
 
-        case "CREATE_TASK": return state
+        case "CREATE_TASK":
+            return {...state,tasks: [...state.tasks,action.payload]};
 
         case "CHANGE_TASK_STATUS":
             console.log(action.payload)
@@ -29,31 +30,31 @@ function reducer(state = initialState, action){
             const newStatus = state.statuses[newIndex]
             const changeTaskStatus = state.tasks.map(task =>
             task.id === action.payload.id ? {...task,status: newStatus} : task)
-            return {...state,tasks:changeTaskStatus}
+            return {...state,tasks:changeTaskStatus};
 
         case "CHANGE_PRIORITY_UP":
             const newTasksUp= state.tasks.map(task =>
                 task.id === action.payload ? {...task, priority : task.priority + 1} : task)
-            return {...state,tasks:newTasksUp}
+            return {...state,tasks:newTasksUp};
 
         case "CHANGE_PRIORITY_DOWN":
             const newTasksDown= state.tasks.map(task =>
                 task.id === action.payload ? {...task, priority : task.priority - 1} : task)
-            return {...state,tasks : newTasksDown}
+            return {...state,tasks : newTasksDown};
 
         case "EDIT_TASK": return state
 
         case "DELETE_TASK":
             const deleteTask = state.tasks.filter(elem => elem.id !== action.payload)
-            return {...state,tasks : deleteTask}
+            return {...state,tasks : deleteTask};
 
         case "TOGGLE_MODAL":
             return {...state, modalWindowData: {...state.modalWindowData,
                 isOpen : !state.modalWindowData.isOpen,
                     task: action.payload.task,
-                    mode: action.payload.mode}}
+                    mode: action.payload.mode}};
 
-        default: return state
+        default: return state;
     }
 }
 
