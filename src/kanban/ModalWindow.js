@@ -14,21 +14,24 @@ function ModalWindow(props) {
         props.deleteTask(props.task.id)
         props.closeModal()
     }
+
     useEffect(() => {
         setInputCheck('')
     }, [props.task])
 
-    const onSave =()=>{
+    const onSaveCreate =()=>{
        const newTask = {id: Math.random().toString(), name, description, status, priority}
-       props. createNewTask(newTask)
+       props.createNewTask(newTask)
         props.closeModal()
-
+        setName('')
+        setDescription('')
+        setPriority(props.priorities[0])
+        setStatus(props.statuses[0])
     }
 
     if (props.mode === "Create") {
         return (
             <>
-
                 <Modal show={props.isOpen} onHide={props.closeModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>Create new Task</Modal.Title>
@@ -74,7 +77,7 @@ function ModalWindow(props) {
                         <Button variant="outline-secondary" onClick={props.closeModal}>
                             Close
                         </Button>
-                        <Button variant="outline-primary" onClick={onSave}>
+                        <Button variant="outline-primary" onClick={onSaveCreate}>
                             Save Changes
                         </Button>
                     </Modal.Footer>
@@ -180,7 +183,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     closeModal: () => dispatch({type: "TOGGLE_MODAL", payload: {}}),
     deleteTask: (id) => dispatch({type: "DELETE_TASK", payload: id}),
-    createNewTask: (newTask) => dispatch({type: "CREATE_TASK", payload:{...newTask}})
+    createNewTask: (newTask) => dispatch({type: "CREATE_TASK", payload: newTask})
 
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ModalWindow)
